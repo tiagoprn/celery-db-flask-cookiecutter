@@ -34,13 +34,11 @@ Since we are in the era of "microservices", your project should contain only an 
     cd ~/projects/
     ```
 
-- Run the cookiecutter:
-
-* From a local copy:
+- Run the cookiecutter from the local copy:
 
     `$ cookiecutter ~/cookiecutters/minimal_flask_app_cookiecutter`
 
-* Directly from github (recommended):
+... or directly from github (recommended):
 
     `$ cookiecutter gh:tiagoprn/minimal_flask_app_cookiecutter`
 

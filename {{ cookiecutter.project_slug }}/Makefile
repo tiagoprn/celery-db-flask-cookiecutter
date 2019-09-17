@@ -11,7 +11,7 @@ clean:  ## Clean python bytecodes, cache...
 	@find . -name ".cache" -type d | xargs rm -rf
 	@find . -name ".coverage" -type f | xargs rm -rf
 
-init-env:
+init-env:  ## create a .env file with the environment variables.
 	@cp etc/.env.sample .env
 	@echo '.env file initialized at the project root. Customize it as you may.'
 

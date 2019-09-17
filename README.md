@@ -36,11 +36,12 @@ Since we are in the era of "microservices", your project should contain only an 
 
 - Run the cookiecutter:
 
-. From a local copy:
+* From a local copy:
 
     `$ cookiecutter ~/cookiecutters/minimal_flask_app_cookiecutter`
 
-. Directly from github (recommended):
+* Directly from github (recommended):
+
     `$ cookiecutter gh:tiagoprn/minimal_flask_app_cookiecutter`
 
 It will ask some questions with sane defaults, and then will generate a folder with the value you

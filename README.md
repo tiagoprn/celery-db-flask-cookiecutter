@@ -20,12 +20,12 @@ Since we are in the era of "microservices", your project should contain only an 
 
     `$ sudo apt install cookiecutter`
 
-- Clone this repository into your filesystem:
+- If you want to clone this repository locally to run the cookiecutter also locally:
 
     ```
     $ mkdir -p ~/cookiecutters
     $ cd ~/cookiecutters
-    $ git clone git@github.com:tiagoprn/minimal_flask_app_cookiecutter.git
+    $ git clone  https://github.com/tiagoprn/minimal_flask_app_cookiecutter
     ```
 
 - Enter the folder where your want to create your project locally:
@@ -34,9 +34,14 @@ Since we are in the era of "microservices", your project should contain only an 
     cd ~/projects/
     ```
 
-- Run command:
+- Run the cookiecutter:
+
+. From a local copy:
 
     `$ cookiecutter ~/cookiecutters/minimal_flask_app_cookiecutter`
+
+. Directly from github (recommended):
+    `$ cookiecutter gh:tiagoprn/minimal_flask_app_cookiecutter`
 
 It will ask some questions with sane defaults, and then will generate a folder with the value you
 indicated for `project_slug`. Congratulations, this is your new minimal flask project! :)

@@ -25,7 +25,7 @@ Since we are in the era of "microservices", your project should contain only an 
     ```
     $ mkdir -p ~/cookiecutters
     $ cd ~/cookiecutters
-    $ git clone git@github.com:tiagoprn/minimal_flask_app.git
+    $ git clone git@github.com:tiagoprn/minimal_flask_app_cookiecutter.git
     ```
 
 - Enter the folder where your want to create your project locally:
@@ -36,7 +36,7 @@ Since we are in the era of "microservices", your project should contain only an 
 
 - Run command:
 
-    `$ cookiecutter ~/cookiecutters/minimal_flask_app`
+    `$ cookiecutter ~/cookiecutters/minimal_flask_app_cookiecutter`
 
 It will ask some questions with sane defaults, and then will generate a folder with the value you
 indicated for `project_slug`. Congratulations, this is your new minimal flask project! :)
@@ -48,7 +48,7 @@ indicated for `project_slug`. Congratulations, this is your new minimal flask pr
 - Create a virtualenv to the project. If you're using pyenv:
 
     ```
-    $ pyenv virtualenv 3.7.3 your-project_slug
+    $ pyenv virtualenv 3.7.0 your-project_slug
     $ pyenv activate your-project_slug
     ```
 

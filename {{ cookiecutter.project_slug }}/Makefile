@@ -23,7 +23,9 @@ runserver-dev:  ## Run flask development server
 	set -a && source .env && set +a && flask run
 
 runserver:  ## Run gunicorn production server
-	 set -a && source .env && set +a && gunicorn -c worker_settings.py {{ cookiecutter.project_slug }}:app -b 127.0.0.1:5000 --log-level INFO
+	 # Gunicorn needs to bind to 0.0.0.0 so to be able to receive requests from the docker network,
+	 # otherwise it will only receive them locally.
+	 set -a && source .env && set +a && gunicorn -c worker_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO
 
 shell:  ## initialize a shell
 	 set -a && source .env && set +a && flask shell

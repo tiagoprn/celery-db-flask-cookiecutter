@@ -1,0 +1,1 @@
+- Configure CircleCI to build an app on the filesystem and run the linter and tests.

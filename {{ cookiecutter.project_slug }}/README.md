@@ -1,4 +1,4 @@
-# tiagoprn's flask project
+# {{ cookiecutter.project_name }}
 
-A template for simple flask projects.
+**DESCRIPTION:** {{ cookiecutter.description }}
 

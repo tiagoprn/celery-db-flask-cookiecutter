@@ -10,7 +10,11 @@ Since we are in the era of "microservices", your project should contain only an 
 - Python 3 (by default, 3.7.0)
 - Flask installed
 - Gunicorn to run in production
+- Docker image generation (properly tagged, and with a `slim` image also)
 - A sample endpoint working
+- Unit tests
+- pylint
+- black for code formatting, isort to fix import order
 - A Makefile to ease project management, with commands to run the development server, the shell,
   etc...
 

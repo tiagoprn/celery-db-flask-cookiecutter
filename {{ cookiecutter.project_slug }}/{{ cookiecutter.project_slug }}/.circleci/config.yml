@@ -1,0 +1,122 @@
+version: 2.1
+
+commands:
+  get_app_version:
+    steps:
+      - run:
+          name: Get APP_VERSION
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "staging" ]; then
+              echo 'export APP_VERSION=${CIRCLE_SHA1}' >> ${BASH_ENV}
+            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo 'export APP_VERSION=$(cat VERSION)' >> ${BASH_ENV}
+            fi
+            source ${BASH_ENV}
+
+jobs:
+  code-quality-and-tests:
+    docker:
+      - image: circleci/python:3.7.3
+        environment:
+          FLASK_APP:"{{ cookiecutter.project_slug }}/__init__.py"
+          DEBUG: False
+          DB_NAME: sample_db
+          DB_USER: sample_appuser
+          DB_PASSWORD: sample_apppass
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          LOG_LEVEL: DEBUG
+          LOG_VARS: "asctime created levelname funcName lineno name pathname process processName message"
+      - image: circleci/postgres:11.4-alpine-ram
+        environment:
+          POSTGRES_USER: sample_appuser
+          POSTGRES_DB: sample_db
+          POSTGRES_PASSWORD: sample_apppass
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements-dev.txt" }}
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/development.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements-dev.txt" }}
+
+      - run:
+          name: run style-check
+          command: |
+            . venv/bin/activate
+            make style-check
+
+      - run:
+          name: run linter
+          command: |
+            . venv/bin/activate
+            make lint
+
+      - run:
+          name: run unit tests and coverage report
+          command: |
+            . venv/bin/activate
+            make coverage
+
+  publish-release-on-github:
+    machine: true
+    environment:
+      EMAIL: tiagoprn@gmail.com
+      GIT_AUTHOR_NAME: tiagoprn-circleci
+      GIT_COMMITTER_NAME: tiagoprn-circleci
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "ssh-key-fingerprint-here"
+      - checkout
+      - run:
+          name: Publish the release on github
+          command: |
+              echo 'Creating tag on the repository and publishing release on github...' && \
+              ./scripts/publish-release-on-github.sh && \
+              echo 'Succesfully finished! o/'
+
+      - persist_to_workspace:
+          root: ~/project/
+          paths: ["VERSION"]
+
+  build-and-upload-containers-to-container-registry:
+    machine: true
+    steps:
+      - checkout
+      - get_app_version
+      - run:
+          name: Build and upload the app and worker container accordingly
+          command: |
+              echo 'Building webapp container...'
+              make docker-build-remote-app
+              echo 'App container build finished.'
+
+
+# the build-and-upload-containers-to-ecr-and-k8s job
+# only triggers when merging into staging
+workflows:
+  version: 2
+  default_workflow:
+    jobs:
+      - code-quality-and-tests
+      - publish-release-on-github:
+          filters:
+            branches:
+              only: staging
+      - build-and-upload-containers-to-container-registry:
+          filters:
+            branches:
+              only: staging

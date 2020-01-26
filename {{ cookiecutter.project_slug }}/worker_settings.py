@@ -1,3 +1,12 @@
+# https://pythonspeed.com/articles/gunicorn-in-docker/
+
+import multiprocessing
+
+# http://docs.gunicorn.org/en/latest/design.html#how-many-workers
+cpus = multiprocessing.cpu_count()
+WORKERS = (2 * cpus) + 1
+THREADS = WORKERS * 2
+
 # Gunicorn configuration file.
 
 def get_timeout():
@@ -68,8 +77,10 @@ backlog = 500
 #       A positive integer. Generally set in the 1-5 seconds range.
 #
 
-workers = 2
-worker_class = 'sync'
+workers = WORKERS
+worker_class = 'gthread'
+threads = THREADS
+
 worker_connections = 1000
 
 timeout = get_timeout()

@@ -28,7 +28,7 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: 5432
           LOG_LEVEL: DEBUG
-          LOG_VARS: "asctime created levelname funcName lineno name pathname process processName message"
+          LOG_VARS: "levelname asctime msecs name funcName lineno processName process message"
       - image: circleci/postgres:11.4-alpine-ram
         environment:
           POSTGRES_USER: sample_appuser

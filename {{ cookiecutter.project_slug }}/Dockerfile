@@ -15,14 +15,20 @@ RUN echo "run_command= $RUN_COMMAND"
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends  \
- build-essential apt-utils libssl-dev zlib1g-dev libbz2-dev \
- libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev \
+ ca-certificates openssl build-essential apt-utils \
+ libssl-dev zlib1g-dev libbz2-dev strace libreadline-dev \
+ libsqlite3-dev wget curl llvm libncurses5-dev tcptraceroute \
  libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
  libpq-dev libcurl4-openssl-dev libssl-dev tree python-pycurl \
- libgnutls28-dev procps htop inetutils-ping ncdu inetutils-telnet -y \
+ libgnutls28-dev procps htop inetutils-ping ncdu inetutils-telnet \
+ net-tools iproute2 nmap strace vim-runtime -y \
  && apt-get -y autoremove \
  && rm -fr /var/lib/apt/lists/* \
  && rm -fr /var/cache/apt/archives/*
+
+# Add custom ssl certificates here if you need
+# RUN wget https://remote.com/custom.crt -O /usr/local/share/ca-certificates/custom.crt && \
+#    update-ca-certificates
 
 RUN mkdir /tmp/requirements
 COPY requirements* /tmp/requirements/

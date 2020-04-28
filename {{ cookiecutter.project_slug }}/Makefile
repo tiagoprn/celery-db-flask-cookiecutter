@@ -30,7 +30,7 @@ runserver:  ## Run gunicorn production server
 	 # /dev/shm tells to the workers to use shared memory, and in-memory filesystem, instead of
 	 # using files, which are slower and can degrade performance - and are not a good practice for
 	 # containers anyhow, since they must redirect all of theirs logs to stdout/stderr.
-	 set -a && source .env && set +a && gunicorn --worker-tmp-dir /dev/shm -c worker_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO  --access-logfile '-' --error-logfile '-'
+	 set -a && source .env && set +a && gunicorn --worker-tmp-dir /dev/shm -c gunicorn_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO  --access-logfile '-' --error-logfile '-'
 
 shell:  ## initialize a shell
 	 set -a && source .env && set +a && flask shell
@@ -39,7 +39,7 @@ routes:  ## show all configured api routes
 	 set -a && source .env && set +a && flask routes
 
 api-test:  ## make a request with curl to check the app is responding
-	curl -i http://localhost:5000/api/echo/hey
+	@curl -i -L http://localhost:5000/api/echo/hey
 
 docker-build-local-app: clean  ## Build local docker image (app)
 	@./scripts/build-docker-image.sh $(PROJECT_NAME)
@@ -82,3 +82,10 @@ test: clean  ## Run the test suite
 
 coverage: clean  ## Run the test coverage report
 	@py.test --cov-config .coveragerc --cov $(PROJECT_NAME) $(PROJECT_NAME) --cov-report term-missing
+
+local-healthcheck-readiness:  ## Run curl to make sure the app/worker is ready
+	@curl http://localhost:5000/health-check/readiness
+
+local-healthcheck-liveness:  ## Run curl to make sure the app/worker is live
+	@curl http://localhost:5000/health-check/liveness
+

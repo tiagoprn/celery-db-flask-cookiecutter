@@ -5,8 +5,11 @@ from flask import Flask
 # Import blueprints once everything is configured
 from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint
 
-app = Flask(__name__)
+
+def create_app():
+    app = Flask(__name__)  # pylint: disable=redefined-outer-name
+    app.register_blueprint(api_blueprint)
+    return app
 
 
-# Create blueprints for the API
-app.register_blueprint(api_blueprint)
+app = create_app()

@@ -1,15 +1,6 @@
-import os
+from {{ cookiecutter.project_slug }}.celery_utils import init_celery
+from {{ cookiecutter.project_slug }}.factory import create_app, make_celery
 
-from flask import Flask
-
-# Import blueprints once everything is configured
-from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint
-
-
-def create_app():
-    app = Flask(__name__)  # pylint: disable=redefined-outer-name
-    app.register_blueprint(api_blueprint)
-    return app
-
-
+celery = make_celery()
 app = create_app()
+init_celery(celery, app)

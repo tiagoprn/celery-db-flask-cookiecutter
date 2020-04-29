@@ -1,0 +1,15 @@
+version: '2'
+services:
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq-{{ cookiecutter.project_slug }}
+    network_mode: bridge
+    restart: unless-stopped
+    ports:
+      - 15672:15672
+      - 15671:15671
+      - 5672:5672
+      - 5671:5671
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password

@@ -2,7 +2,7 @@ version: '2'
 services:
   rabbitmq:
     image: rabbitmq:3.7-management
-    container_name: rabbitmq-test
+    container_name: rabbitmq-{{ cookiecutter.project_slug }}
     network_mode: bridge
     restart: unless-stopped
     ports:

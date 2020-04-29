@@ -1,6 +1,6 @@
 # minimal flask app
 
-This project is a minimalistic flask template that can be used as a base to develop simple APIs on the Flask Framework.
+This project is a minimalistic flask template that can be used as a base to develop simple APIs on the Flask Framework, using celery to run asynchronous jobs.
 
 ## Architecture
 
@@ -17,6 +17,9 @@ Since we are in the era of "microservices", your project should contain only an 
 - black for code formatting, isort to fix import order
 - A Makefile to ease project management, with commands to run the development server, the shell,
   etc...
+- celery configured
+- docker-compose configured with the app required infrastructure (rabbitmq as
+  celery broker)
 
 ## How to use this cookiecutter
 
@@ -78,3 +81,10 @@ indicated for `project_slug`. Congratulations, this is your new minimal flask pr
 
     `$ make runserver`
 
+- Start the development worker:
+
+    `$ make runworker-dev`
+
+... or start the production worker (gunicorn):
+
+    `$ make runworker`

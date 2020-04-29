@@ -3,11 +3,13 @@ import os
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
+from random import randint
 
 import flask
 from flask import Blueprint, jsonify
 
 from {{ cookiecutter.project_slug }}.exceptions import APIError
+from {{ cookiecutter.project_slug }}.tasks import compute
 
 blueprint = Blueprint('api', __name__)
 
@@ -28,9 +30,19 @@ def handle_api_error(error):
     return response
 
 
-@blueprint.route('/api/echo/<value>', methods=['GET'])
-def echo(value):
-    return jsonify({'value': value})
+@blueprint.route('/compute', methods=['GET'])
+def call_compute_task():
+    random_number = randint(1000, 9999)
+    now_timestamp = datetime.now().isoformat()
+
+    # The function below is actually a celery task,
+    # that must have a celery worker up listening to
+    # the queue so that it can be executed.
+    compute.apply_async(
+        kwargs={'random_number': random_number, 'now_timestamp': now_timestamp}
+    )
+
+    return jsonify({'message': 'Successfully sent to queue.'})
 
 
 @blueprint.route('/health-check/readiness', methods=['GET'])

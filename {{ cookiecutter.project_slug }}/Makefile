@@ -6,12 +6,16 @@ SHARED_FOLDER=/tmp/shared-docker-$(shell date +%Y%m%d_%H%M%S)
 help:  ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
-clean:  ## Clean python bytecodes, cache...
+clean:  ## Clean python bytecodes, optimized files, logs, cache, coverage...
 	@find . -name "*.pyc" | xargs rm -rf
 	@find . -name "*.pyo" | xargs rm -rf
 	@find . -name "__pycache__" -type d | xargs rm -rf
-	@find . -name ".cache" -type d | xargs rm -rf
-	@find . -name ".coverage" -type f | xargs rm -rf
+	@rm -f .coverage
+	@rm -rf htmlcov/
+	@rm -fr .pytest_cache/
+	@rm -f coverage.xml
+	@rm -f *.log
+	@find . -name "celerybeat-schedule*" | xargs rm -rf
 
 init-env:  ## create a .env file with the environment variables.
 	@cp etc/.env.sample .env
@@ -22,7 +26,10 @@ requirements:  ## Install pip requirements
 	@pip install -r requirements-dev.txt
 
 runserver-dev:  ## Run flask development server
-	set -a && source .env && set +a && flask run
+	set -a && source .env && set +a && python dev-server.py
+
+runworker-dev: clean  ## Run a development celery worker
+	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=DEBUG --pool=solo --queues={{ cookiecutter.project_slug }}-default
 
 runserver:  ## Run gunicorn production server
 	 # Gunicorn needs to bind to 0.0.0.0 so to be able to receive requests from the docker network,
@@ -31,6 +38,10 @@ runserver:  ## Run gunicorn production server
 	 # using files, which are slower and can degrade performance - and are not a good practice for
 	 # containers anyhow, since they must redirect all of theirs logs to stdout/stderr.
 	 set -a && source .env && set +a && gunicorn --worker-tmp-dir /dev/shm -c gunicorn_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO  --access-logfile '-' --error-logfile '-'
+
+runworker: clean  ## Run a production celery worker
+	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=INFO --autoscale=50,5 --without-heartbeat --without-gossip --without-mingle --queues={{ cookiecutter.project_slug }}-default
+
 
 shell:  ## initialize a shell
 	 set -a && source .env && set +a && flask shell
@@ -88,4 +99,13 @@ local-healthcheck-readiness:  ## Run curl to make sure the app/worker is ready
 
 local-healthcheck-liveness:  ## Run curl to make sure the app/worker is live
 	@curl http://localhost:5000/health-check/liveness
+
+docker-compose-up: clean ## Up docker-compose for development
+	@docker-compose up -d
+
+docker-compose-stop: clean ## Stop docker-compose for development
+	@docker-compose stop
+
+docker-compose-rm: docker-compose-stop ## Delete the development environment containers
+	@docker-compose rm -f
 

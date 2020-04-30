@@ -7,9 +7,8 @@ from random import randint
 
 import flask
 from flask import Blueprint, jsonify
-
-from {{ cookiecutter.project_slug }}.exceptions import APIError
-from {{ cookiecutter.project_slug }}.tasks import compute
+from {{cookiecutter.project_slug}}.exceptions import APIError
+from {{cookiecutter.project_slug}}.tasks import compute, generate_random_string
 
 blueprint = Blueprint('api', __name__)
 
@@ -44,6 +43,14 @@ def call_compute_task():
 
     return jsonify({'message': 'Successfully sent to queue.'})
 
+@blueprint.route('/string', methods=['GET'])
+def call_generate_random_string_task():
+    # The function below is actually a celery task,
+    # that must have a celery worker up listening to
+    # the queue so that it can be executed.
+    generate_random_string.apply_async()
+
+    return jsonify({'message': 'Successfully sent to queue.'})
 
 @blueprint.route('/health-check/readiness', methods=['GET'])
 def readiness():

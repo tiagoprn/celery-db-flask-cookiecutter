@@ -29,7 +29,7 @@ runserver-dev:  ## Run flask development server
 	set -a && source .env && set +a && python dev-server.py
 
 runworker-dev: clean  ## Run a development celery worker
-	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=DEBUG --pool=solo --queues={{ cookiecutter.project_slug }}-default
+	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=DEBUG --pool=solo --queues={{ cookiecutter.project_slug }}-default,{{ cookiecutter.project_slug }}-high-priority
 
 runserver:  ## Run gunicorn production server
 	 # Gunicorn needs to bind to 0.0.0.0 so to be able to receive requests from the docker network,
@@ -40,7 +40,7 @@ runserver:  ## Run gunicorn production server
 	 set -a && source .env && set +a && gunicorn --worker-tmp-dir /dev/shm -c gunicorn_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO  --access-logfile '-' --error-logfile '-'
 
 runworker: clean  ## Run a production celery worker
-	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=INFO --autoscale=50,5 --without-heartbeat --without-gossip --without-mingle --queues={{ cookiecutter.project_slug }}-default
+	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=INFO --autoscale=50,5 --without-heartbeat --without-gossip --without-mingle --queues={{ cookiecutter.project_slug }}-default,{{ cookiecutter.project_slug }}-high-priority
 
 
 shell:  ## initialize a shell

@@ -1,7 +1,6 @@
 import os
 
 from celery import Celery
-
 from flask import Flask
 from {{cookiecutter.project_slug}}.celery_utils import init_celery
 
@@ -28,5 +27,10 @@ def make_celery(app_name=__name__):
     configuration = {
         'task_default_queue': '{{ cookiecutter.project_slug }}-default',
         'task_create_missing_queues': True,
+        'task_routes': {
+             '{{ cookiecutter.project_slug }}.tasks.generate_random_string': {
+                 'queue': '{{ cookiecutter.project_slug }}-high-priority'
+             }
+         },
     }
     return Celery(app_name, broker=broker, config_source=configuration)

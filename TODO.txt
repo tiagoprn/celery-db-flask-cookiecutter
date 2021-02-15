@@ -1,2 +1,8 @@
-- [ ] Implement a `settings.py` equivalent with decouple. Put there celery
-  factory configuration at least.
+- [ ] Update requirements with Flask-Migrate, etc...
+
+- [ ] Create commands on the Makefile for the worker and db migrations factory configuration at least.
+
+- [ ] Implement a `settings.py` equivalent with decouple. Put there current configuration used on `extensions.py`.
+
+- [ ] Create a project from this cookiecutter to validate everything is working.
+

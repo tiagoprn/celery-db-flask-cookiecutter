@@ -1,8 +1,14 @@
-- [ ] Update requirements with Flask-Migrate, etc...
+- [x] Update requirements with Flask-Migrate, etc...
 
-- [ ] Create commands on the Makefile for the worker and db migrations factory configuration at least.
+- [x] Create commands on the Makefile for the worker and db migrations factory configuration at least.
 
-- [ ] Implement a `settings.py` equivalent with decouple. Put there current configuration used on `extensions.py`.
+- [x] Implement a `settings.py` equivalent with decouple. Put there current configuration used on `extensions.py`.
+
+- [ ] Create a project from this cookiecutter to validate everything is working.
+
+- [ ] Use the same requirements pattern used on personal-api.
+
+- [ ] Upgrade other requirements (black, isort, etc...)
 
 - [ ] Create a project from this cookiecutter to validate everything is working.
 

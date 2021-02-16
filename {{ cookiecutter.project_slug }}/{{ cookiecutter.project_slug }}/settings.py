@@ -1,9 +1,7 @@
 from decouple import config
 
-IS_WORKER_APP = config('IS_WORKER_APP', cast=bool)
-IS_DEV_APP = config('IS_DEV_APP', cast=bool)
+IS_DEV_APP = config('IS_DEV_APP', cast=bool)  # Queues
 
-# Queues
 QUEUE_HOST = config('RABBITMQ_HOST', cast=str)
 QUEUE_PORT = config('RABBITMQ_PORT', cast=int, default=5672)
 QUEUE_USER = config('RABBITMQ_USER', cast=str)

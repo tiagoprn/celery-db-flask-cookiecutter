@@ -10,7 +10,6 @@ from {{cookiecutter.project_slug}}.extensions import (
 PKG_NAME = os.path.dirname(os.path.realpath(__file__)).split("/")[-1]
 
 
-# pylint: disable=import-outside-toplevel
 def create_app():
     app = Flask(PKG_NAME)
 
@@ -18,7 +17,7 @@ def create_app():
 
     init_celery(celery, app)
 
-    from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint
+    from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint  # pylint: disable=import-outside-toplevel
 
     app.register_blueprint(api_blueprint)
     return app

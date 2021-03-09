@@ -1,3 +1,5 @@
+import logging
+
 from decouple import config
 
 IS_DEV_APP = config('IS_DEV_APP', cast=bool)  # Queues

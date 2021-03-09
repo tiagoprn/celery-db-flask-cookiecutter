@@ -39,20 +39,23 @@ def make_celery():
         # This allows starting a shell to run a task and it stopping at
         # pdb/ipdb breakpoint to ease debugging.
         configuration['task_always_eager'] = True
-    return Celery('{{ cookiecutter.project_slug }}.tasks', broker=broker, config_source=configuration)
-
+    return Celery(
+            '{{ cookiecutter.project_slug }}.tasks',
+            broker=broker,
+            config_source=configuration
+    )
 
 celery = make_celery()
 
 db = SQLAlchemy()
 migrate = Migrate()
 
-# pylint: disable=import-outside-toplevel,unused-import
+
 def init_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     # models must be imported here so that the migrations app detect them
-    from {{ cookiecutter.project_slug }}.scripts.models import SampleModel
+    from {{ cookiecutter.project_slug }}.scripts.models import SampleModel  # pylint: disable=import-outside-toplevel,unused-import
 
     migrate.init_app(app, db)

@@ -1,4 +1,5 @@
 import logging
+import logging.config
 
 from decouple import config
 

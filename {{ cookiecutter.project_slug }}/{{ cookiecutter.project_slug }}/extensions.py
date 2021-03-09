@@ -58,6 +58,6 @@ def init_db(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     # models must be imported here so that the migrations app detect them
-    from {{ cookiecutter.project_slug }}.scripts.models import SampleModel
+    from {{ cookiecutter.project_slug }}.models import SampleModel
 
     migrate.init_app(app, db)

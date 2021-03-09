@@ -2,7 +2,7 @@ import logging
 import string
 from random import SystemRandom, randint
 
-from {{cookiecutter.project_slug}} import celery
+from {{cookiecutter.project_slug}}.factory import celery
 
 logger = logging.getLogger(__name__)
 

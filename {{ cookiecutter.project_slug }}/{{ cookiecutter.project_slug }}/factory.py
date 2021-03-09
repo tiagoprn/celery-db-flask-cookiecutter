@@ -17,7 +17,7 @@ def create_app():
 
     init_celery(celery, app)
 
-    from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint  # pylint: disable=import-outside-toplevel
+    from {{ cookiecutter.project_slug }}.api import blueprint as api_blueprint
 
     app.register_blueprint(api_blueprint)
     return app

@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from {{cookiecutter.project_slug}} import settings
 
 
+# pylint: disable=redefined-outer-name
 def init_celery(celery, app):
     celery.conf.update(app.config)
     TaskBase = celery.Task
@@ -51,11 +52,12 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 
+# pylint: disable=unused-import
 def init_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     # models must be imported here so that the migrations app detect them
-    from {{ cookiecutter.project_slug }}.scripts.models import SampleModel  # pylint: disable=import-outside-toplevel,unused-import
+    from {{ cookiecutter.project_slug }}.scripts.models import SampleModel
 
     migrate.init_app(app, db)

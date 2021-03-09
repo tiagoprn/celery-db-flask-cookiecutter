@@ -25,13 +25,13 @@ requirements:  ## Install pip requirements
 	@pip install --upgrade pip
 	@pip install -r requirements-dev.txt
 
-runserver-dev:  ## Run flask development server
+runserver-dev: migrate  ## Run flask development server
 	set -a && source .env && set +a && python dev-server.py
 
-runworker-dev: clean  ## Run a development celery worker
+runworker-dev: clean migrate  ## Run a development celery worker
 	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=DEBUG --pool=solo --queues={{ cookiecutter.project_slug }}-default,{{ cookiecutter.project_slug }}-high-priority
 
-runserver:  ## Run gunicorn production server
+runserver: migrate  ## Run gunicorn production server
 	 # Gunicorn needs to bind to 0.0.0.0 so to be able to receive requests from the docker network,
 	 # otherwise it will only receive them locally. With '-' logs are redirected to stdout (because containers)
 	 # /dev/shm tells to the workers to use shared memory, and in-memory filesystem, instead of
@@ -39,9 +39,14 @@ runserver:  ## Run gunicorn production server
 	 # containers anyhow, since they must redirect all of theirs logs to stdout/stderr.
 	 set -a && source .env && set +a && gunicorn --worker-tmp-dir /dev/shm -c gunicorn_settings.py {{ cookiecutter.project_slug }}:app -b 0.0.0.0:5000 --log-level INFO  --access-logfile '-' --error-logfile '-'
 
-runworker: clean  ## Run a production celery worker
+runworker: clean migrate  ## Run a production celery worker
 	@celery worker -A {{ cookiecutter.project_slug }}.celery --loglevel=INFO --autoscale=50,5 --without-heartbeat --without-gossip --without-mingle --queues={{ cookiecutter.project_slug }}-default,{{ cookiecutter.project_slug }}-high-priority
 
+migrations: clean  ## create/upgrade migrations
+	@set -a && source .env && set +a && flask db init || /bin/true && flask db migrate
+
+migrate: clean  ## upgrade database to the most recent migration
+	@set -a && source .env || /bin/true && set +a && flask db upgrade
 
 shell:  ## initialize a shell
 	 set -a && source .env && set +a && flask shell
@@ -88,10 +93,10 @@ lint:  ## Run the linter to enforce our coding practices
 	@pylint --rcfile=.pylintrc $(PROJECT_NAME)/*
 	@printf '\n FINISHED! \n --- \n'
 
-test: clean  ## Run the test suite
+test: clean migrate  ## Run the test suite
 	@cd $(PROJECT_NAME) && py.test -s -vvv
 
-coverage: clean  ## Run the test coverage report
+coverage: clean migrate  ## Run the test coverage report
 	@py.test --cov-config .coveragerc --cov $(PROJECT_NAME) $(PROJECT_NAME) --cov-report term-missing
 
 local-healthcheck-readiness:  ## Run curl to make sure the app/worker is ready

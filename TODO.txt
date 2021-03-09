@@ -1,2 +1,0 @@
-- [ ] Implement a `settings.py` equivalent with decouple. Put there celery
-  factory configuration at least.

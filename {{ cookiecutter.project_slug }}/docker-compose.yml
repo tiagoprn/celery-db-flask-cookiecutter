@@ -1,5 +1,17 @@
 version: '2'
 services:
+  postgresql:
+    image: postgres:11.4
+    container_name: postgres-{{ cookiecutter.project_slug }}
+    network_mode: bridge
+    restart: unless-stopped
+    ports:
+      - 5432:5432/tcp
+    environment:
+      - POSTGRES_USER=postgres
+      - PGPASSWORD=postgres
+      - POSTGRES_DB={{ cookiecutter.project_slug }}
+      - TZ=Etc/UTC
   rabbitmq:
     image: rabbitmq:3.7-management
     container_name: rabbitmq-{{ cookiecutter.project_slug }}

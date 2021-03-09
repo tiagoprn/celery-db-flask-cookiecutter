@@ -4,11 +4,11 @@ from decouple import config
 
 IS_DEV_APP = config('IS_DEV_APP', cast=bool)  # Queues
 
-QUEUE_HOST = config('RABBITMQ_HOST', cast=str)
-QUEUE_PORT = config('RABBITMQ_PORT', cast=int, default=5672)
-QUEUE_USER = config('RABBITMQ_USER', cast=str)
-QUEUE_PASSWORD = config('RABBITMQ_PASSWORD', cast=str)
-DEFAULT_QUEUE_NAME = config('RABBITMQ_DEFAULT_QUEUE', cast=str)
+QUEUE_HOST = config('QUEUE_HOST', cast=str)
+QUEUE_PORT = config('QUEUE_PORT', cast=int, default=5672)
+QUEUE_USER = config('QUEUE_USER', cast=str)
+QUEUE_PASSWORD = config('QUEUE_PASSWORD', cast=str)
+DEFAULT_QUEUE_NAME = config('DEFAULT_QUEUE_NAME', cast=str)
 TASKS_QUEUES = {
     '{{ cookiecutter.project_slug }}.tasks.compute': {'queue': 'compute'},
     '{{ cookiecutter.project_slug }}.tasks.generate_random_string': {

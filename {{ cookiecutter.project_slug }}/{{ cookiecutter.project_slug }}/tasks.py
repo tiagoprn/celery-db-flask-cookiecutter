@@ -1,6 +1,6 @@
 import logging
 import string
-from random import SystemRandom
+from random import SystemRandom, randint
 
 from {{cookiecutter.project_slug}} import celery
 
@@ -23,5 +23,5 @@ def generate_random_string() -> None:
     logger.info('Generating random string...')
     random_string = ''.join(SystemRandom().choice(string.ascii_uppercase +
         string.ascii_lowercase + string.digits) for _ in
-        range(random.randint(10, 20)))
+        range(randint(10, 20)))
     logger.info(f'Random string successfully generated: {random_string}')

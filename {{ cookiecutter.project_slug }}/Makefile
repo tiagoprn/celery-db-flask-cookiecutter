@@ -23,7 +23,7 @@ init-env:  ## create a .env file with the environment variables.
 
 requirements:  ## Install pip requirements
 	@pip install --upgrade pip
-	@pip install -r requirements-dev.txt
+	@pip install -r requirements.txt
 
 runserver-dev: migrate  ## Run flask development server
 	set -a && source .env && set +a && python dev-server.py

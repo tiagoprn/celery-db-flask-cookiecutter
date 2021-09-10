@@ -1,31 +1,41 @@
-# minimal flask app
+# celery-db-flask-cookiecutter
 
-This project is a minimalistic flask template that can be used as a base to develop simple APIs on the Flask Framework, using celery to run asynchronous jobs and sqlalchemy for database persistance.
-
-## Architecture
-
-Since we are in the era of "microservices", your project should contain only an `api` blueprint .
+This project is a flask template that can be used as a base to develop simple APIs on the Flask Framework with swagger documentation integrated, using celery to run asynchronous jobs and sqlalchemy for database persistance.
 
 ## Features
 
-- Python 3
-- Flask installed
-- Gunicorn to run in production
-- Docker image generation (properly tagged, and with a `slim` image also)
-- A sample endpoint working
-- Unit tests
-- pylint
-- black for code formatting, isort to fix import order
-- A Makefile to ease project management, with commands to run the development server, the shell,
-  etc...
+- A Makefile to wrap the most common operations and ease project management and , with commands to run the development server, the shell, etc...
+
+- python 3.9
+
+- flask 2.0
+
+- flasgger (swagger wrapper) as documentation for the API, using doctrings on the API endpoints to write the documentation.
+
+- gunicorn configured to run the project in the production environment.
+
+- pylint as the linter, black as the code formatter, isort to fix import order
+
+- pytest tests, with some plugins to ease presentation.
+
+- tests coverage report.
+
 - celery configured
+
 - SQLAlchemy integration
-- docker-compose configured with the app required infrastructure (rabbitmq as
-  celery broker, postgresql as the database.)
+
+- environment variables for configuration.
+
+- docker/podman image generation (properly tagged)
+
+- docker-compose configured with the app required infrastructure (rabbitmq as celery broker, postgresql as the database)
+
+- Sample endpoints working
+
 
 ## How to use this cookiecutter
 
-- Install cookiecutter on your distribution (e.g. Ubuntu 18.04):
+- Install cookiecutter on your distribution (e.g. Ubuntu):
 
 `$ sudo apt install cookiecutter`
 
@@ -34,7 +44,7 @@ Since we are in the era of "microservices", your project should contain only an 
 ```
 $ mkdir -p ~/cookiecutters
 $ cd ~/cookiecutters
-$ git clone  https://github.com/tiagoprn/minimal_flask_app_cookiecutter
+$ git clone  https://github.com/tiagoprn/celery-db-flask-cookiecutter
 ```
 
 - Enter the folder where your want to create your project locally:
@@ -45,11 +55,11 @@ cd ~/projects/
 
 - Run the cookiecutter from the local copy:
 
-`$ cookiecutter ~/cookiecutters/minimal_flask_app_cookiecutter`
+`$ cookiecutter ~/cookiecutters/celery-db-flask-cookiecutter`
 
 ... or directly from github (recommended):
 
-`$ cookiecutter gh:tiagoprn/minimal_flask_app_cookiecutter`
+`$ cookiecutter gh:tiagoprn/celery-db-flask-cookiecutter`
 
 It will ask some questions with sane defaults, and then will generate a folder with the value you
 indicated for `project_slug`. Congratulations, this is your new minimal flask project! :)
@@ -58,10 +68,26 @@ indicated for `project_slug`. Congratulations, this is your new minimal flask pr
 
 `$ cd ~/projects/your-project_slug`
 
+## OPTION 1 - BUILD AND RUN FROM DOCKER/PODMAN
+
+```
+$ make docker-build-local-app-container && make docker-run-local-app-container
+
+or...
+
+$ make podman-build-local-app-container && make podman-run-local-app-container
+```
+
+Then, check the api documentation:
+
+`$ make api-docs`
+
+## OPTION 2 - INSTALL LOCALLY ON A VIRTUALENV AND RUN FROM THERE
+
 - Create a virtualenv to the project. If you're using pyenv:
 
 ```
-$ pyenv virtualenv 3.7.0 your-project_slug
+$ pyenv virtualenv 3.9.1 your-project_slug
 $ pyenv activate your-project_slug
 ```
 
@@ -72,7 +98,6 @@ $ pyenv activate your-project_slug
 - Run the make command to create the sample configuration file:
 
 ```
-$ cd ../../
 $ make init-env
 ```
 
@@ -106,6 +131,10 @@ $ make test
 ... or start the production server (gunicorn):
 
 `$ make runserver`
+
+Then, check the api documentation:
+
+`$ make api-docs`
 
 - Start the development worker:
 

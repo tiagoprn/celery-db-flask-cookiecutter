@@ -1,14 +1,18 @@
 """
-The db and migrate objects were created here according to the recommendation
+This module is used to create extensions, according to the recommendation
 from the official flask docs for app factories:
 https://flask.palletsprojects.com/en/1.1.x/patterns/appfactories/#factories-extensions
 """
 
 from celery import Celery
+from flasgger import Swagger
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from {{cookiecutter.project_slug}} import settings
+from {{ cookiecutter.project_slug }} import settings
 
+
+def init_swagger(app):
+    return Swagger(app, template=settings.SWAGGER_TEMPLATE)
 
 # pylint: disable=redefined-outer-name
 def init_celery(celery, app):

@@ -26,15 +26,17 @@ def handle_api_error(error):
 @blueprint.route('/compute', methods=['GET'])
 def call_compute_task():
     """
-    Runs the compute function asynchronously, through sending a task to celery.
+    Put a compute task on the queue.
+
+    Runs the compute function asynchronously,
+    through sending a task to celery.
 
     The function called is actually a celery task, that must have
     a celery worker up listening to the queue so that it can be executed.
     ---
     responses:
       200:
-        description: returns that the message that celery will use
-        to run the task was put on the queue.
+        description: message was put on the queue.
     """
 
     random_number = randint(1000, 9999)
@@ -49,6 +51,8 @@ def call_compute_task():
 @blueprint.route('/string', methods=['GET'])
 def call_generate_random_string_task():
     """
+    Put a generate random string task on the queue.
+
     Runs the generate random string function asynchronously,
     through sending a task to celery.
 
@@ -57,8 +61,7 @@ def call_generate_random_string_task():
     ---
     responses:
       200:
-        description: returns that the message that celery will use
-        to run the task was put on the queue.
+        description: message was put on the queue.
     """
 
     generate_random_string.apply_async()

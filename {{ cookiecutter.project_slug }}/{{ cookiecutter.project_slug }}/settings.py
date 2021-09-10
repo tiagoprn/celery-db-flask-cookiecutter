@@ -3,19 +3,9 @@ import logging.config
 
 from decouple import config
 
-IS_DEV_APP = config('IS_DEV_APP', cast=bool)  # Queues
+from {{ cookiecutter.project_slug }}.commons import get_app_version
 
-QUEUE_HOST = config('QUEUE_HOST', cast=str)
-QUEUE_PORT = config('QUEUE_PORT', cast=int, default=5672)
-QUEUE_USER = config('QUEUE_USER', cast=str)
-QUEUE_PASSWORD = config('QUEUE_PASSWORD', cast=str)
-DEFAULT_QUEUE_NAME = config('DEFAULT_QUEUE_NAME', cast=str)
-TASKS_QUEUES = {
-    '{{ cookiecutter.project_slug }}.tasks.compute': {'queue': 'compute'},
-    '{{ cookiecutter.project_slug }}.tasks.generate_random_string': {
-        'queue': 'generate_random_string'
-    },
-}
+IS_DEV_APP = config('IS_DEV_APP', cast=bool)  # Queues
 
 # Logging configuration
 LOG_LEVEL = config('LOG_LEVEL', default='INFO', cast=str)
@@ -67,7 +57,24 @@ if JSON_LOGS:
 
 logging.config.dictConfig(LOGGING)
 
-# database
+VERSION = get_app_version()
+
+SWAGGER_TEMPLATE = {
+    'swagger': '2.0',
+    'info': {
+        'title': '{{ cookiecutter.project_slug }}',
+        'description': '{{ cookiecutter.description }}',
+        'contact': {
+            'responsibleOrganization': 'tiagopr.nl',
+            'responsibleDeveloper': 'Tiago',
+            'email': 'tiago@tiagoprnl.me',
+            'url': 'https://tiagopr.nl',
+        },
+        'version': VERSION,
+    },
+    'schemes': ['http', 'https'],
+}
+
 DATABASE_USER = config('DATABASE_USER')
 DATABASE_PASSWORD = config('DATABASE_PASSWORD')
 DATABASE_HOST = config('DATABASE_HOST')
@@ -79,3 +86,15 @@ DATABASE_URI = (
     f'/{DATABASE_NAME}'
 )
 SQLALCHEMY_DATABASE_URI = DATABASE_URI
+
+QUEUE_HOST = config('QUEUE_HOST', cast=str)
+QUEUE_PORT = config('QUEUE_PORT', cast=int, default=5672)
+QUEUE_USER = config('QUEUE_USER', cast=str)
+QUEUE_PASSWORD = config('QUEUE_PASSWORD', cast=str)
+DEFAULT_QUEUE_NAME = config('DEFAULT_QUEUE_NAME', cast=str)
+TASKS_QUEUES = {
+    '{{ cookiecutter.project_slug }}.tasks.compute': {'queue': 'compute'},
+    '{{ cookiecutter.project_slug }}.tasks.generate_random_string': {
+        'queue': 'generate_random_string'
+    },
+}

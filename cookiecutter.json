@@ -1,5 +1,5 @@
 {
-    "project_slug": "tiagoprn_flask_project",
-    "project_name": "tiagoprn's flask project",
-    "description": "A template for simple flask projects."
+    "project_slug": "flask_celery_sqlalchemy_project",
+    "project_name": "flask celery sqlalchemy project",
+    "description": "A template for flask projects using celery and  sqlalchemy."
 }

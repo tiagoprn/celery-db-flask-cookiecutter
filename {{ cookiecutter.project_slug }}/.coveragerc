@@ -1,3 +1,5 @@
 [run]
 omit =
+    {{ cookiecutter.project_slug }}/settings.py
+    {{ cookiecutter.project_slug }}/tests/*
     */migrations/*.py

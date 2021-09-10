@@ -18,7 +18,7 @@ clean:  ## Clean python bytecodes, optimized files, logs, cache, coverage...
 	@find . -name "celerybeat-schedule*" | xargs rm -rf
 
 init-env:  ## create a .env file with the environment variables.
-	@cp etc/.env.sample .env
+	@cp etc/env.sample .env
 	@echo '.env file initialized at the project root. Customize it as you may.'
 
 requirements:  ## Install pip requirements
@@ -55,13 +55,22 @@ routes:  ## show all configured api routes
 	 set -a && source .env && set +a && flask routes
 
 api-test:  ## make a request with curl to check the app is responding
-	@curl -i -L http://localhost:5000/api/echo/hey
+	@curl -i -L http://localhost:5000/welcome/you
+
+style:	## Run isort and black auto formatting code style in the project
+	@echo 'running isort...'
+	@isort -m 3 --trailing-comma --use-parentheses --honor-noqa .
+	@echo 'running black...'
+	@black -S -t py39 -l 79 $(PROJECT_NAME)/. --exclude '/(\.git|\.venv|env|build|dist)/'
+
+style-check:  ## Run isort and black check code style
+	@echo 'isort check...'
+	@isort -v --check -m 3 --trailing-comma --use-parentheses --honor-noqa --color .
+	@echo 'black check...'
+	@black -S -t py37 -l 79 --check $(PROJECT_NAME)/. --exclude '/(\.git|\.venv|env|build|dist)/'
 
 docker-build-local-app: clean  ## Build local docker image (app)
 	@./scripts/build-docker-image.sh $(PROJECT_NAME)
-
-docker-build-remote-app: clean  ## Build docker image on CI and push it to the container registry
-	@./scripts/build-docker-image.sh $(PROJECT_NAME) --remote
 
 docker-run-local-app-container: clean  ## Run the app docker image locally
 	echo "You can exchange files with the container on the directory $(SHARED_FOLDER) on the host and /shared on the container."
@@ -70,23 +79,19 @@ docker-run-local-app-container: clean  ## Run the app docker image locally
 	@echo "IMAGE_NAME=$(IMAGE_NAME)"
 	@echo '---'
 	@echo 'Below is the CONTAINER_ID:'
-	@docker run -d -p 5000:5000 --env-file .env --network bridge --mount type=bind,source=$(SHARED_FOLDER),target=/shared ${IMAGE_NAME}
+	@docker run --rm -d -p 5000:5000 --name {{ cookiecutter.project_slug }} --env-file .env --network bridge --mount type=bind,source=$(SHARED_FOLDER),target=/shared ${IMAGE_NAME}
 
-docker-run-local-slim-app-container: clean  ## Run the slim app docker image locally
+podman-build-local-app: clean  ## Build local podman image (app)
+	@./scripts/build-podman-image.sh $(PROJECT_NAME)
+
+podman-run-local-app-container: clean  ## Run the app podman image locally
 	echo "You can exchange files with the container on the directory $(SHARED_FOLDER) on the host and /shared on the container."
 	@mkdir -p $(SHARED_FOLDER)
-	$(eval IMAGE_NAME=$(shell bash -c "docker images| grep $(PROJECT_NAME)| grep `cat VERSION` | grep slim | cut -d ' ' -f 1"))
+	$(eval IMAGE_NAME=$(shell bash -c "podman images| grep $(PROJECT_NAME)| grep `cat VERSION` | grep -v slim | cut -d ' ' -f 1"))
 	@echo "IMAGE_NAME=$(IMAGE_NAME)"
 	@echo '---'
 	@echo 'Below is the CONTAINER_ID:'
-	@docker run -d -p 5000:5000 --env-file .env --network bridge --mount type=bind,source=$(SHARED_FOLDER),target=/shared ${IMAGE_NAME}
-
-style:  ## Run isort and black auto formatting code style in the project
-	@isort -m 3 -tc -y
-	@black -S -t py37 -l 79 $(PROJECT_NAME)/. --exclude '/(\.git|\.venv|env|build|dist)/'
-
-style-check:  ## Check isort and black code style
-	@black -S -t py37 -l 79 --check $(PROJECT_NAME)/. --exclude '/(\.git|\.venv|env|build|dist)/'
+	@podman run --rm -d -p 5000:5000 --name {{ cookiecutter.project_slug }} --network bridge ${IMAGE_NAME}
 
 lint:  ## Run the linter to enforce our coding practices
 	@printf '\n --- \n >>> Running linter...<<<\n'

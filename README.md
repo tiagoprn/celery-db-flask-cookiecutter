@@ -8,13 +8,13 @@ This project is a flask template that can be used as a base to develop simple AP
 
 - python 3.13
 
-- flask (latest)
+- flask 3.1
 
 - flasgger (swagger wrapper) as documentation for the API, using doctrings on the API endpoints to write the documentation.
 
 - gunicorn configured to run the project in the production environment.
 
-- pylint as the linter, black as the code formatter, isort to fix import order
+- ruff as linter and formatter
 
 - pytest tests, with some plugins to ease presentation.
 
@@ -28,7 +28,7 @@ This project is a flask template that can be used as a base to develop simple AP
 
 - docker/podman image generation (properly tagged)
 
-- docker-compose configured with the app required infrastructure (rabbitmq as celery broker, postgresql as the database)
+- docker-compose configured with the app required infrastructure to develop locally (rabbitmq as celery broker, postgresql as the database)
 
 - Sample endpoints working
 
@@ -38,25 +38,13 @@ This project is a flask template that can be used as a base to develop simple AP
 
 `$ sudo apt install cookiecutter`
 
-- If you want to clone this repository locally to run the cookiecutter also locally:
-
-``` bash
-$ mkdir -p ~/cookiecutters
-$ cd ~/cookiecutters
-$ git clone  https://github.com/tiagoprn/celery-db-flask-cookiecutter
-```
-
 - Enter the folder where your want to create your project locally:
 
 ``` bash
 cd ~/projects/
 ```
 
-- Run the cookiecutter from the local copy:
-
-`$ cookiecutter ~/cookiecutters/celery-db-flask-cookiecutter`
-
-... or directly from github (recommended):
+- Run the cookiecutter from github:
 
 `$ cookiecutter gh:tiagoprn/celery-db-flask-cookiecutter`
 

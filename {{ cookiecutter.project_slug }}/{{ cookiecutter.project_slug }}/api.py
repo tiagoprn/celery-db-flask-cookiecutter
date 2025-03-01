@@ -1,8 +1,5 @@
 import logging
-import os
 from datetime import datetime
-from functools import lru_cache
-from pathlib import Path
 from random import randint
 
 import flask
@@ -48,6 +45,7 @@ def call_compute_task():
 
     return jsonify({'message': 'Successfully sent to queue.'})
 
+
 @blueprint.route('/string', methods=['GET'])
 def call_generate_random_string_task():
     """
@@ -67,6 +65,7 @@ def call_generate_random_string_task():
     generate_random_string.apply_async()
 
     return jsonify({'message': 'Successfully sent to queue.'})
+
 
 @blueprint.route('/health-check/readiness', methods=['GET'])
 def readiness():

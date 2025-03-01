@@ -2,7 +2,6 @@ import os
 
 from flask import Flask
 from {{cookiecutter.project_slug}}.extensions import (
-    celery,
     init_celery,
     init_db,
     init_swagger
@@ -19,7 +18,7 @@ def create_app():
 
     init_db(app)
 
-    init_celery(celery, app)
+    init_celery(app)
 
     from {{ cookiecutter.project_slug }}.api import blueprint
 

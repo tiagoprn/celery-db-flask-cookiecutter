@@ -2,12 +2,12 @@ import logging
 import string
 from random import SystemRandom, randint
 
-from {{cookiecutter.project_slug}}.factory import celery
+from celery import shared_task
 
 logger = logging.getLogger(__name__)
 
 
-@celery.task()
+@shared_task()
 def compute(random_number: int, now_timestamp: str) -> None:
     logger.info(
         f'Received random_number={random_number}, '
@@ -18,7 +18,8 @@ def compute(random_number: int, now_timestamp: str) -> None:
         f'Computation finished. random_number is now: {random_number}.'
     )
 
-@celery.task()
+
+@shared_task()
 def generate_random_string() -> None:
     logger.info('Generating random string...')
     random_string = ''.join(SystemRandom().choice(string.ascii_uppercase +

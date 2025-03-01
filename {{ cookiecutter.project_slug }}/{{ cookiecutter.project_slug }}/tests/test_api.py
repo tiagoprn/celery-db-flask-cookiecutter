@@ -16,14 +16,14 @@ def test_404():
     assert response.status_code == 404
 
 
-@mock.patch('{{ cookiecutter.project_slug }}.api.get_app_version', return_value='1.0')
+@mock.patch('{{ cookiecutter.project_slug }}.commons.get_app_version', return_value='1.0')
 def test_healthcheck_readiness(_mocked_version):
     response = client.get('/health-check/readiness')
     assert response.status_code == 200
     assert set(response.json.keys()) == {'ready', 'app_version', 'app_type'}
 
 
-@mock.patch('{{ cookiecutter.project_slug }}.api.get_app_version', return_value='1.0')
+@mock.patch('{{ cookiecutter.project_slug }}.commons.get_app_version', return_value='1.0')
 def test_healthcheck_liveness(_mocked_version):
     response = client.get('/health-check/liveness')
     assert response.status_code == 200

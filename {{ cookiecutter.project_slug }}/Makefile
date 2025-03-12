@@ -128,6 +128,15 @@ dev-infra-stop: clean  ## Stop docker infrastructure containers
 dev-infra-delete: docker-compose-stop  ## Delete docker infrastructure containers
 	@docker compose rm -f
 
+dev-infra-quick-recreate-containers:  dev-infra-delete dev-infra-start  ## delete, start and recreate infrastructure containers (applying the database migrations)
+	@echo -e 'Waiting 10 seconds to the containers to start so we can run the db migrations...'
+	@for i in $$(seq 10 -1 1); do \
+		echo -ne "$$i seconds remaining...\r"; \
+		sleep 1; \
+	done
+	@echo -e 'Applying migrations...'
+	@$(MAKE) migrate
+
 dev-api-docs:  ## Print URL of the API docs
 	@echo 'Visit 0.0.0.0/apidocs on your browser to view the swagger API docs.'
 
@@ -142,3 +151,10 @@ dev-runserver: migrate  ## Run flask development server
 
 dev-runworker: clean migrate  ## Run a development celery worker
 	@python celery_worker.py worker --loglevel=DEBUG --pool=solo --queues=$(PROJECT_NAME)-default,$(PROJECT_NAME)-high-priority
+
+dev-setup-pgcli:  ## install pgcli globally (using uv)
+	@echo 'This will install pgcli (postgres CLI client) globally.'
+	@uv tool install pgcli@latest
+
+dev-pgcli:  ## run pgcli (postgres CLI client)
+	@pgcli postgres://postgres:postgres@0.0.0.0:5432/{{cookiecutter.project_slug}}

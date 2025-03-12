@@ -1,5 +1,8 @@
 [run]
 omit =
-    {{ cookiecutter.project_slug }}/settings.py
-    {{ cookiecutter.project_slug }}/tests/*
-    */migrations/*.py
+    celery_worker.py
+    dev-server.py
+    gunicorn_settings.py
+    migrations/*
+    {{cookiecutter.project_slug}}/tests/*
+disable_warnings = all

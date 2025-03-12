@@ -1,6 +1,7 @@
-.ropeproject/
-.env
-*.pyc
 __pycache__
 .coverage
-tmp/
+.venv
+.ruff_cache
+tmp
+.env
+*.pyc

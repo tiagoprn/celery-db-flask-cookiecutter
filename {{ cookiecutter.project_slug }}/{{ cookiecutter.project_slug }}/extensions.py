@@ -6,13 +6,29 @@ https://flask.palletsprojects.com/en/1.1.x/patterns/appfactories/#factories-exte
 
 from celery import Celery
 from flasgger import Swagger
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from {{ cookiecutter.project_slug }} import settings
+from {{cookiecutter.project_slug}} import settings
+
+
+bcrypt = Bcrypt()
+jwt = JWTManager()
 
 
 def init_swagger(app):
     return Swagger(app, template=settings.SWAGGER_TEMPLATE)
+
+
+def init_bcrypt(app):
+    app.config['JWT_SECRET_KEY'] = settings.JWT_SECRET_KEY
+    bcrypt.init_app(app)
+
+
+def init_jwt(app):
+    app.config['JWT_SECRET_KEY'] = settings.JWT_SECRET_KEY
+    jwt.init_app(app)
 
 
 def init_celery(app):
@@ -48,10 +64,12 @@ def init_celery(app):
 
     # Wrap tasks to run within the Flask app context
     TaskBase = celery.Task
+
     class ContextTask(TaskBase):
         def __call__(self, *args, **kwargs):
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
+
     celery.Task = ContextTask
 
     # Optionally store the celery instance on the app for later use
@@ -70,7 +88,8 @@ def init_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
+
     # models must be imported here so that the migrations app detect them
-    from {{ cookiecutter.project_slug }}.models import SampleModel
+    from {{ cookiecutter.project_slug }}.models import SampleModel, User
 
     migrate.init_app(app, db)

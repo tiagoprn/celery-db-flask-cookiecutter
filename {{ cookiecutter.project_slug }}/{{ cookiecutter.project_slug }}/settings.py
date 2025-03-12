@@ -61,14 +61,15 @@ VERSION = get_app_version()
 
 SWAGGER_TEMPLATE = {
     'swagger': '2.0',
+    'uiversion': 2,
     'info': {
         'title': '{{ cookiecutter.project_slug }}',
         'description': '{{ cookiecutter.description }}',
         'contact': {
-            'responsibleOrganization': 'tiagopr.nl',
+            'responsibleOrganization': 'TDS',
             'responsibleDeveloper': 'Tiago',
-            'email': 'tiago@tiagoprnl.me',
-            'url': 'https://tiagopr.nl',
+            'email': 'tdvservices@proton.me',
+            'url': 'https://writeloop.dev',
         },
         'version': VERSION,
     },
@@ -98,3 +99,5 @@ TASKS_QUEUES = {
         'queue': 'generate_random_string'
     },
 }
+
+JWT_SECRET_KEY = config('JWT_SECRET_KEY', cast=str)

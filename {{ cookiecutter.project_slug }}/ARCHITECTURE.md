@@ -178,7 +178,7 @@ Then in your models:
 
 For complex operations:
 
-``` bash
+``` python
  # pydo/commands/register_user_command.py
  class RegisterUserCommand:
      def __init__(self, username, email, password):

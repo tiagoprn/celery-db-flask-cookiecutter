@@ -1,6 +1,7 @@
 from unittest import mock
 
 from {{ cookiecutter.project_slug }} import app
+from {{ cookiecutter.project_slug }}.models import User
 
 client = app.test_client()
 
@@ -141,4 +142,3 @@ class TestUserAPI:
         new_access_token = new_login_response.json['access_token']
         assert new_access_token is not None
         assert new_access_token != access_token
-

@@ -1,7 +1,8 @@
 from unittest import mock
 
-from {{ cookiecutter.project_slug }} import app
-from {{ cookiecutter.project_slug }}.models import User
+from {{cookiecutter.project_slug}} import app
+from {{cookiecutter.project_slug}}.models import User
+
 
 client = app.test_client()
 
@@ -9,7 +10,7 @@ client = app.test_client()
 def test_compute_sent_to_queue():
     response = client.get('/compute')
     assert response.status_code == 200
-    assert response.json == {"message": "Successfully sent to queue."}
+    assert response.json == {'message': 'Successfully sent to queue.'}
 
 
 def test_404():
@@ -17,14 +18,14 @@ def test_404():
     assert response.status_code == 404
 
 
-@mock.patch('{{ cookiecutter.project_slug }}.commons.get_app_version', return_value='1.0')
+@mock.patch('{{cookiecutter.project_slug}}.commons.get_app_version', return_value='1.0')
 def test_healthcheck_readiness(_mocked_version):
     response = client.get('/health-check/readiness')
     assert response.status_code == 200
     assert set(response.json.keys()) == {'ready', 'app_version', 'app_type'}
 
 
-@mock.patch('{{ cookiecutter.project_slug }}.commons.get_app_version', return_value='1.0')
+@mock.patch('{{cookiecutter.project_slug}}.commons.get_app_version', return_value='1.0')
 def test_healthcheck_liveness(_mocked_version):
     response = client.get('/health-check/liveness')
     assert response.status_code == 200
@@ -58,8 +59,6 @@ class TestUserAPI:
         assert isinstance(new_user_uuid, str)
 
     def test_login_successful(self, test_client, db_session):
-        create_user_response = self.submit_create_user_request(test_client=test_client)
-        new_user_uuid = create_user_response.json['uuid']
 
         login_response = self.submit_login_request(test_client=test_client)
         assert login_response.status_code == 200
@@ -76,7 +75,6 @@ class TestUserAPI:
 
         login_response = self.submit_login_request(test_client=test_client)
         access_token = login_response.json['access_token']
-        refresh_token = login_response.json['refresh_token']
 
         headers = {'Authorization': f'Bearer {access_token}'}
         response = test_client.get('/user', headers=headers)
@@ -92,8 +90,7 @@ class TestUserAPI:
         assert response.json == expected_json_response
 
     def test_get_new_jwt_temporary_token_when_logged_in(self, test_client, db_session):
-        create_user_response = self.submit_create_user_request(test_client=test_client)
-        new_user_uuid = create_user_response.json['uuid']
+        _ = self.submit_create_user_request(test_client=test_client)
 
         login_response = self.submit_login_request(test_client=test_client)
         assert login_response.status_code == 200

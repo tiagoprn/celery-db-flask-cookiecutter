@@ -1,9 +1,3 @@
-from datetime import datetime, timedelta
-from typing import List
-
-import pytest
-from sqlalchemy.exc import DataError
-
 from {{cookiecutter.project_slug}}.models import User
 
 
@@ -16,34 +10,6 @@ def create_user():
     }
     new_user = User().register(**user_data)
     return new_user
-
-
-def create_tasks_for_single_user(status: List[str] = []) -> List[str]:
-    uuids = []
-
-    user = create_user()
-
-    tasks_data = [
-        {
-            'user_uuid': user.uuid,
-            'title': 'study',
-            'description': 'must get better',
-            'due_date': datetime.utcnow() + timedelta(days=3),
-            'status': status[0] if status else 'pending',
-        },
-        {
-            'user_uuid': user.uuid,
-            'title': 'gym',
-            'description': 'must get healthy',
-            'due_date': datetime.utcnow() + timedelta(days=1),
-            'status': status[1] if status else 'pending',
-        },
-    ]
-    for data in tasks_data:
-        new_task = Task().create(**data)
-        uuids.append(str(new_task.uuid))
-
-    return uuids
 
 
 class TestUserModel:
@@ -80,7 +46,6 @@ class TestUserModel:
         new_user = create_user()
         assert new_user.username
 
-        old_email = new_user.email
         old_last_updated_at = new_user.last_updated_at
         new_email = 'jlp2@startrek.com'
         new_user.update(email=new_email)
@@ -110,7 +75,6 @@ class TestUserModel:
         new_user = create_user()
         assert new_user.username
 
-        old_email = new_user.email
         old_password = new_user.password_hash
         old_last_updated_at = new_user.last_updated_at
         new_email = 'jlp2@startrek.com'

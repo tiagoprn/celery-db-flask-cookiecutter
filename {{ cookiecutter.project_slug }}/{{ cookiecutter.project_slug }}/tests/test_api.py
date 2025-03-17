@@ -59,7 +59,7 @@ class TestUserAPI:
         assert isinstance(new_user_uuid, str)
 
     def test_login_successful(self, test_client, db_session):
-
+        _ = self.submit_create_user_request(test_client=test_client)
         login_response = self.submit_login_request(test_client=test_client)
         assert login_response.status_code == 200
 

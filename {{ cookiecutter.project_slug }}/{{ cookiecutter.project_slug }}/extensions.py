@@ -90,6 +90,6 @@ def init_db(app):
     db.init_app(app)
 
     # models must be imported here so that the migrations app detect them
-    from {{ cookiecutter.project_slug }}.models import SampleModel, User
+    from {{ cookiecutter.project_slug }}.models import User
 
     migrate.init_app(app, db)

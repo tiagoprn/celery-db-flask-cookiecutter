@@ -14,21 +14,6 @@ https://docs.sqlalchemy.org/en/13/core/type_basics.html
 """
 
 
-class SampleModel(db.Model):
-    """
-    Available datatypes:
-    https://docs.sqlalchemy.org/en/13/core/type_basics.html
-    """
-
-    uuid = db.Column(UUID(as_uuid=True), default=uuid4, primary_key=True)
-    created_at = db.Column(
-        db.DateTime, nullable=False, default=datetime.now(), index=True
-    )
-    name = db.Column(db.String(255), nullable=False, index=True)
-    value = db.Column(db.Float, nullable=False)
-    extra_info = db.Column(db.Text, nullable=True)
-
-
 class User(db.Model):
     uuid = db.Column(UUID(as_uuid=True), default=uuid4, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
